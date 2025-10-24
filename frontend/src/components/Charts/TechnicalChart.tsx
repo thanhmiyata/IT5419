@@ -44,7 +44,7 @@ const TechnicalChart: React.FC<TechnicalChartProps> = ({
     { value: '1Y', label: '1 Năm' },
   ]
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue)
   }
 

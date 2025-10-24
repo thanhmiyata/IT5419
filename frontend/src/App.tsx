@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { Box } from '@mui/material'
 
@@ -20,7 +20,6 @@ import LoadingSpinner from './components/UI/LoadingSpinner'
 
 function App() {
   // Mock authentication state for demo
-  const isAuthenticated = true // Set to true to bypass login for demo
   const isLoading = false
 
   if (isLoading) {

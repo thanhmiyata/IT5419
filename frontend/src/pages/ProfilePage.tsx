@@ -4,8 +4,6 @@ import {
   Typography,
   Paper,
   Grid,
-  Card,
-  CardContent,
   TextField,
   Button,
   Avatar,
@@ -19,7 +17,6 @@ import {
 } from '@mui/material'
 import {
   Person as PersonIcon,
-  Email as EmailIcon,
   Security as SecurityIcon,
   Notifications as NotificationsIcon,
 } from '@mui/icons-material'

@@ -1,5 +1,5 @@
 import { io, Socket } from 'socket.io-client'
-import { WebSocketMessage, ChatMessage } from '@/types'
+import { ChatMessage } from '@/types'
 
 class WebSocketService {
   private socket: Socket | null = null

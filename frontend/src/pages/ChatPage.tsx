@@ -19,6 +19,7 @@ import {
 } from '@mui/icons-material'
 import { ChatMessage } from '@/types'
 import LoadingSpinner from '@/components/UI/LoadingSpinner'
+import ChartViewport from '@/components/ChartViewport'
 
 const ChatPage: React.FC = () => {
   const { sessionId } = useParams<{ sessionId: string }>()
@@ -31,6 +32,8 @@ const ChatPage: React.FC = () => {
   
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [showChart, setShowChart] = useState(false)
+  const [chartSymbol, setChartSymbol] = useState('VN-INDEX')
 
   useEffect(() => {
     // Mock chat sessions for demo
@@ -61,13 +64,49 @@ const ChatPage: React.FC = () => {
     }
 
     setMessages(prev => [...prev, userMessage])
+    const currentMessage = message.trim().toLowerCase()
     setMessage('')
 
-    try {
-      // Mock send message for demo
-      console.log('Sending message:', message.trim())
-    } catch (error) {
-      console.error('Failed to send message:', error)
+    // Check if user wants to see chart
+    if (currentMessage.includes('biểu đồ') || currentMessage.includes('chart') || currentMessage.includes('đồ thị')) {
+      setShowChart(true)
+      
+      // Extract symbol from message if possible
+      const symbolMatch = currentMessage.match(/(vn-index|vni|hose|hnx|upcom)/i)
+      if (symbolMatch) {
+        setChartSymbol(symbolMatch[0].toUpperCase())
+      }
+      
+      // Add bot response
+      setTimeout(() => {
+        const botMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          content: `Tôi đã mở biểu đồ ${chartSymbol} cho bạn. Bạn có thể xem phân tích kỹ thuật ở bên phải.`,
+          type: 'text',
+          sender: 'bot',
+          timestamp: new Date().toISOString(),
+        }
+        setMessages(prev => [...prev, botMessage])
+      }, 1000)
+    } else {
+      try {
+        // Mock send message for demo
+        console.log('Sending message:', message.trim())
+        
+        // Add mock bot response
+        setTimeout(() => {
+          const botMessage: ChatMessage = {
+            id: (Date.now() + 1).toString(),
+            content: `Tôi hiểu bạn đang hỏi về "${message.trim()}". Đây là câu trả lời mẫu. Để xem biểu đồ, bạn có thể gõ "biểu đồ" hoặc "chart".`,
+            type: 'text',
+            sender: 'bot',
+            timestamp: new Date().toISOString(),
+          }
+          setMessages(prev => [...prev, botMessage])
+        }, 1000)
+      } catch (error) {
+        console.error('Failed to send message:', error)
+      }
     }
   }
 
@@ -155,7 +194,7 @@ const ChatPage: React.FC = () => {
           Chat với AI
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Hỏi bất kỳ câu hỏi nào về cổ phiếu và đầu tư
+          Hỏi bất kỳ câu hỏi nào về cổ phiếu và đầu tư. Gõ "biểu đồ" để xem chart!
         </Typography>
       </Paper>
 
@@ -166,6 +205,8 @@ const ChatPage: React.FC = () => {
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
+          width: showChart ? '50%' : '100%',
+          transition: 'width 0.3s ease',
         }}
       >
         <Box
@@ -234,6 +275,14 @@ const ChatPage: React.FC = () => {
           </Box>
         </Box>
       </Paper>
+
+      {/* Chart Viewport */}
+      <ChartViewport
+        isVisible={showChart}
+        onClose={() => setShowChart(false)}
+        symbol={chartSymbol}
+        data={[]}
+      />
     </Box>
   )
 }

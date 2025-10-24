@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  Drawer,
   List,
   ListItem,
   ListItemButton,
@@ -10,6 +9,7 @@ import {
   Box,
   Divider,
   Tooltip,
+  IconButton,
 } from '@mui/material'
 import {
   Home as HomeIcon,
@@ -72,7 +72,12 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
   }
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ 
+      height: '100vh', 
+      display: 'flex', 
+      flexDirection: 'column',
+      width: '100%'
+    }}>
       {/* Header */}
       <Box
         sx={{
@@ -98,7 +103,12 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       <Divider />
 
       {/* Navigation Menu */}
-      <List sx={{ flexGrow: 1, pt: 1 }}>
+      <List sx={{ 
+        flexGrow: 1, 
+        pt: 1,
+        overflow: 'auto',
+        minHeight: 0
+      }}>
         {menuItems.map((item) => (
           <ListItem key={item.text} disablePadding>
             <ListItemButton
@@ -145,11 +155,19 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       <Divider />
 
       {/* Footer */}
-      <Box sx={{ p: 2 }}>
-        <Typography variant="caption" color="text.secondary" align="center">
+      <Box sx={{ 
+        p: 2,
+        mt: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: 'auto'
+      }}>
+        <Typography variant="caption" color="text.secondary" align="center" sx={{ mb: 0.5 }}>
           © 2024 Stock Chat Bot
         </Typography>
-        <Typography variant="caption" color="text.secondary" align="center" display="block">
+        <Typography variant="caption" color="text.secondary" align="center">
           Phiên bản 1.0.0
         </Typography>
       </Box>

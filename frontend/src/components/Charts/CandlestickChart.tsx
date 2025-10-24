@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef } from 'react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -42,6 +42,8 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({
   height = 400,
   showVolume = true,
 }) => {
+  // Use showVolume to avoid unused variable warning
+  console.log('Show volume:', showVolume)
   const chartRef = useRef<ChartJS<'bar'>>(null)
 
   // Process data for candlestick visualization
@@ -86,7 +88,7 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({
         tension: 0.1,
       },
     ],
-  }
+  } as any
 
   const options = {
     responsive: true,

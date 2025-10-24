@@ -1,5 +1,5 @@
 import { apiService } from './api'
-import { ChatSession, ChatMessage, ApiResponse } from '@/types'
+import { ChatSession, ChatMessage } from '@/types'
 
 class ChatService {
   async createSession(title: string): Promise<ChatSession> {
@@ -82,7 +82,7 @@ class ChatService {
   }
 
   async exportSession(sessionId: string, format: 'pdf' | 'json' | 'txt'): Promise<Blob> {
-    const response = await apiService.get(`/chat/sessions/${sessionId}/export?format=${format}`, {
+    const response = await apiService.get<Blob>(`/chat/sessions/${sessionId}/export?format=${format}`, {
       responseType: 'blob',
     })
     return response.data

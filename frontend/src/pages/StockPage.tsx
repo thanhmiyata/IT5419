@@ -14,7 +14,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   Tabs,
   Tab,
@@ -69,8 +68,8 @@ const StockPage: React.FC = () => {
     timestamp: new Date().toISOString(),
   } : null
   
-  const chartData = null
-  const analysis = null
+  const chartData: { data: any[] } | null = null
+  const analysis: { analysis: string } | null = null
   const isLoading = false
   
   const [searchSymbol, setSearchSymbol] = useState(symbol || '')
@@ -244,7 +243,7 @@ const StockPage: React.FC = () => {
           <Paper>
             <Tabs
               value={tabValue}
-              onChange={(e, newValue) => setTabValue(newValue)}
+              onChange={(_, newValue) => setTabValue(newValue)}
               aria-label="stock analysis tabs"
             >
               <Tab label="Biểu đồ" />
@@ -255,7 +254,7 @@ const StockPage: React.FC = () => {
             <TabPanel value={tabValue} index={0}>
               <TechnicalChart
                 symbol={currentStock.symbol}
-                data={chartData?.data || []}
+                data={(chartData as any)?.data || []}
                 onTimeframeChange={(timeframe) => {
                   console.log('Timeframe changed to:', timeframe)
                 }}
@@ -269,7 +268,7 @@ const StockPage: React.FC = () => {
                     Phân tích AI
                   </Typography>
                   <Typography variant="body1">
-                    {analysis.analysis}
+                    {(analysis as any)?.analysis || ''}
                   </Typography>
                 </Box>
               ) : (

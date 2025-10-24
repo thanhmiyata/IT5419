@@ -15,10 +15,16 @@ import {
   Settings as SettingsIcon,
   Logout as LogoutIcon,
   Person as PersonIcon,
+  Menu as MenuIcon,
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onDesktopDrawerToggle?: () => void
+  desktopOpen?: boolean
+}
+
+const Header: React.FC<HeaderProps> = ({ onDesktopDrawerToggle, desktopOpen = true }) => {
   const navigate = useNavigate()
   
   // Mock data for demo
@@ -32,7 +38,7 @@ const Header: React.FC = () => {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   }
-  const notifications = []
+  const notifications: any[] = []
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [notificationAnchor, setNotificationAnchor] = React.useState<null | HTMLElement>(null)
@@ -85,10 +91,23 @@ const Header: React.FC = () => {
         width: '100%',
       }}
     >
-      {/* Title */}
-      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-        Stock Chat Bot
-      </Typography>
+      {/* Left side - Desktop drawer toggle */}
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        {onDesktopDrawerToggle && (
+          <Tooltip title={desktopOpen ? "Đóng menu" : "Mở menu"}>
+            <IconButton
+              color="inherit"
+              onClick={onDesktopDrawerToggle}
+              sx={{ mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          Stock Chat Bot
+        </Typography>
+      </Box>
 
       {/* Right side actions */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

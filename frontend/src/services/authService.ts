@@ -1,5 +1,5 @@
 import { apiService } from './api'
-import { User, LoginRequest, RegisterRequest, ApiResponse } from '@/types'
+import { User, LoginRequest, RegisterRequest } from '@/types'
 
 interface AuthResponse {
   user: User

@@ -1,5 +1,5 @@
 import { apiService } from './api'
-import { StockData, StockChartData, StockAnalysis, ApiResponse } from '@/types'
+import { StockData, StockChartData, StockAnalysis } from '@/types'
 
 class StockService {
   async getStockData(symbol: string): Promise<StockData> {
@@ -70,7 +70,14 @@ class StockService {
     totalVolume: number;
     totalValue: number;
   }> {
-    const response = await apiService.get('/stocks/market-overview')
+    const response = await apiService.get<{
+      totalStocks: number;
+      gainers: number;
+      losers: number;
+      unchanged: number;
+      totalVolume: number;
+      totalValue: number;
+    }>('/stocks/market-overview')
     if (!response.success) {
       throw new Error(response.error || 'Failed to get market overview')
     }
@@ -115,7 +122,12 @@ class StockService {
     changePercent: number;
     volume: number;
   }[]> {
-    const response = await apiService.get('/stocks/sectors/performance')
+    const response = await apiService.get<{
+      sector: string;
+      change: number;
+      changePercent: number;
+      volume: number;
+    }[]>('/stocks/sectors/performance')
     if (!response.success) {
       throw new Error(response.error || 'Failed to get sector performance')
     }
@@ -136,7 +148,20 @@ class StockService {
     dividend: number;
     dividendYield: number;
   }> {
-    const response = await apiService.get(`/stocks/${symbol}/company`)
+    const response = await apiService.get<{
+      symbol: string;
+      name: string;
+      sector: string;
+      industry: string;
+      description: string;
+      website: string;
+      employees: number;
+      marketCap: number;
+      pe: number;
+      eps: number;
+      dividend: number;
+      dividendYield: number;
+    }>(`/stocks/${symbol}/company`)
     if (!response.success) {
       throw new Error(response.error || 'Failed to get company info')
     }
@@ -151,7 +176,14 @@ class StockService {
     equity: number[];
     years: string[];
   }> {
-    const response = await apiService.get(`/stocks/${symbol}/financials`)
+    const response = await apiService.get<{
+      revenue: number[];
+      netIncome: number[];
+      assets: number[];
+      liabilities: number[];
+      equity: number[];
+      years: string[];
+    }>(`/stocks/${symbol}/financials`)
     if (!response.success) {
       throw new Error(response.error || 'Failed to get financials')
     }
@@ -166,7 +198,14 @@ class StockService {
     source: string;
     sentiment: 'positive' | 'negative' | 'neutral';
   }[]> {
-    const response = await apiService.get(`/stocks/${symbol}/news`, {
+    const response = await apiService.get<{
+      title: string;
+      summary: string;
+      url: string;
+      publishedAt: string;
+      source: string;
+      sentiment: 'positive' | 'negative' | 'neutral';
+    }[]>(`/stocks/${symbol}/news`, {
       params: { limit },
     })
     if (!response.success) {
