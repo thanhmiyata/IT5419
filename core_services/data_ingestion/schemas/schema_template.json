@@ -1,0 +1,334 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Vietnamese Stock Market Data Source Schema",
+  "description": "JSON Schema for validating Vietnamese stock market data source configurations",
+  "type": "object",
+  "required": ["schema_version", "last_updated", "description", "environment", "sources"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Schema version in semver format"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last update"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Human-readable description of this schema"
+    },
+    "environment": {
+      "type": "string",
+      "enum": ["development", "testing", "staging", "production"],
+      "description": "Target environment for this schema"
+    },
+    "sources": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z][a-z0-9_]*$": {
+          "$ref": "#/$defs/source_definition"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Dictionary of data source configurations"
+    }
+  },
+  "$defs": {
+    "source_definition": {
+      "type": "object",
+      "required": [
+        "source_id", "name", "description", "source_type", "reliability", 
+        "base_url", "rate_limits", "capabilities", "supported_exchanges",
+        "supported_currencies", "timezone", "average_response_time_ms", 
+        "success_rate", "data_freshness_seconds"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Unique identifier for this data source"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100,
+          "description": "Human-readable name of the data source"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 500,
+          "description": "Detailed description of the data source"
+        },
+        "source_type": {
+          "type": "string",
+          "enum": ["web_scraping", "rest_api", "websocket", "ftp", "library"],
+          "description": "Type of data source implementation"
+        },
+        "reliability": {
+          "type": "string",
+          "enum": ["very_high", "high", "medium", "low"],
+          "description": "Reliability level of the data source"
+        },
+        "base_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Base URL for the data source"
+        },
+        "api_version": {
+          "type": ["string", "null"],
+          "description": "API version if applicable"
+        },
+        "auth_required": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether authentication is required"
+        },
+        "api_key_required": {
+          "type": "boolean", 
+          "default": false,
+          "description": "Whether an API key is required"
+        },
+        "rate_limits": {
+          "$ref": "#/$defs/rate_limit_config"
+        },
+        "capabilities": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z][a-z0-9_]*$": {
+              "$ref": "#/$defs/capability_definition"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Supported data types and their capabilities"
+        },
+        "supported_exchanges": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["HOSE", "HNX", "UPCOM"]
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Vietnamese stock exchanges supported"
+        },
+        "supported_currencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Supported currencies (ISO 4217 codes)"
+        },
+        "timezone": {
+          "type": "string",
+          "pattern": "^[A-Za-z]+/[A-Za-z_]+$",
+          "description": "Timezone for this data source"
+        },
+        "request_format": {
+          "type": "string",
+          "enum": ["json", "xml", "html", "csv"],
+          "default": "json",
+          "description": "Request format"
+        },
+        "response_format": {
+          "type": "string", 
+          "enum": ["json", "xml", "html", "csv"],
+          "default": "json",
+          "description": "Response format"
+        },
+        "encoding": {
+          "type": "string",
+          "default": "utf-8",
+          "description": "Character encoding"
+        },
+        "user_agent_required": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether a User-Agent header is required"
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Default headers to send with requests"
+        },
+        "maintenance_windows": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Cron expression for maintenance windows"
+          },
+          "description": "Scheduled maintenance windows"
+        },
+        "expected_downtime": {
+          "type": "array", 
+          "items": {
+            "type": "string"
+          },
+          "description": "Known downtime periods"
+        },
+        "contact_info": {
+          "type": ["string", "null"],
+          "description": "Contact information for this data source"
+        },
+        "documentation_url": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "URL to API documentation"
+        },
+        "average_response_time_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 300000,
+          "description": "Average response time in milliseconds"
+        },
+        "success_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Historical success rate (0.0-1.0)"
+        },
+        "data_freshness_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400,
+          "description": "How fresh the data is in seconds"
+        },
+        "parser_class": {
+          "type": ["string", "null"],
+          "description": "Python class name for parsing this source"
+        },
+        "validation_rules": {
+          "type": "object",
+          "description": "Custom validation rules"
+        },
+        "transformation_rules": {
+          "type": "object", 
+          "description": "Data transformation rules"
+        },
+        "health_check_url": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "Health check endpoint URL"
+        },
+        "status_page_url": {
+          "type": ["string", "null"], 
+          "format": "uri",
+          "description": "Status page URL"
+        }
+      },
+      "additionalProperties": false
+    },
+    "rate_limit_config": {
+      "type": "object",
+      "required": [
+        "requests_per_second", "requests_per_minute", "requests_per_hour",
+        "burst_limit", "backoff_factor", "max_retry_delay"
+      ],
+      "properties": {
+        "requests_per_second": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 100,
+          "description": "Maximum requests per second"
+        },
+        "requests_per_minute": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6000,
+          "description": "Maximum requests per minute"
+        },
+        "requests_per_hour": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 360000,
+          "description": "Maximum requests per hour"
+        },
+        "burst_limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Maximum burst requests"
+        },
+        "backoff_factor": {
+          "type": "number",
+          "minimum": 1.0,
+          "maximum": 5.0,
+          "description": "Exponential backoff multiplier"
+        },
+        "max_retry_delay": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600,
+          "description": "Maximum retry delay in seconds"
+        }
+      },
+      "additionalProperties": false
+    },
+    "capability_definition": {
+      "type": "object",
+      "required": [
+        "supported", "update_frequency_seconds", "data_quality_score",
+        "cost_per_request"
+      ],
+      "properties": {
+        "supported": {
+          "type": "boolean",
+          "description": "Whether this capability is supported"
+        },
+        "update_frequency_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400,
+          "description": "How often data is updated in seconds"
+        },
+        "historical_depth_days": {
+          "type": ["integer", "null"],
+          "minimum": 1,
+          "maximum": 36500,
+          "description": "How far back historical data goes in days"
+        },
+        "real_time": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this provides real-time data"
+        },
+        "batch_support": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether batch requests are supported"
+        },
+        "max_symbols_per_request": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Maximum symbols per batch request"
+        },
+        "data_quality_score": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Data quality score (0.0-1.0)"
+        },
+        "cost_per_request": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "Cost per request in USD (0 for free)"
+        },
+        "notes": {
+          "type": ["string", "null"],
+          "maxLength": 500,
+          "description": "Additional notes about this capability"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2024-01-15T10:00:00Z",
+  "description": "Vietnamese Stock Market Data Sources Schema - Development Environment",
+  "environment": "development",
+  "sources": {
+    "vnstock": {
+      "source_id": "vnstock",
+      "name": "VNSTOCK Python Library (Dev)",
+      "description": "VNSTOCK library with reduced load for development",
+      "source_type": "library",
+      "reliability": "very_high",
+      "base_url": "https://api.vnstock.io/v1",
+      "rate_limits": {
+        "requests_per_second": 2.0,
+        "requests_per_minute": 120,
+        "requests_per_hour": 7200,
+        "burst_limit": 8,
+        "backoff_factor": 1.5,
+        "max_retry_delay": 300
+      },
+      "capabilities": {
+        "real_time_prices": {
+          "supported": true,
+          "update_frequency_seconds": 60,
+          "real_time": true,
+          "batch_support": true,
+          "max_symbols_per_request": 10,
+          "data_quality_score": 0.95,
+          "cost_per_request": 0.0,
+          "notes": "Reduced frequency for development"
+        },
+        "market_indices": {
+          "supported": true,
+          "update_frequency_seconds": 120,
+          "real_time": false,
+          "batch_support": false,
+          "max_symbols_per_request": 1,
+          "data_quality_score": 0.99,
+          "cost_per_request": 0.0,
+          "notes": "2-minute updates for dev testing"
+        },
+        "historical_prices": {
+          "supported": true,
+          "update_frequency_seconds": 7200,
+          "historical_depth_days": 365,
+          "real_time": false,
+          "batch_support": true,
+          "max_symbols_per_request": 5,
+          "data_quality_score": 0.98,
+          "cost_per_request": 0.0,
+          "notes": "Limited to 1 year for dev"
+        }
+      },
+      "supported_exchanges": ["HOSE", "HNX", "UPCOM"],
+      "supported_currencies": ["VND"],
+      "timezone": "Asia/Ho_Chi_Minh",
+      "average_response_time_ms": 800,
+      "success_rate": 0.98,
+      "data_freshness_seconds": 60
+    },
+    "cafef": {
+      "source_id": "cafef",
+      "name": "CafeF Vietnam (Dev)",
+      "description": "CafeF with conservative rate limits for development",
+      "source_type": "web_scraping",
+      "reliability": "high",
+      "base_url": "https://cafef.vn",
+      "rate_limits": {
+        "requests_per_second": 1.0,
+        "requests_per_minute": 30,
+        "requests_per_hour": 1800,
+        "burst_limit": 2,
+        "backoff_factor": 2.0,
+        "max_retry_delay": 300
+      },
+      "capabilities": {
+        "real_time_prices": {
+          "supported": true,
+          "update_frequency_seconds": 600,
+          "real_time": false,
+          "batch_support": false,
+          "max_symbols_per_request": 1,
+          "data_quality_score": 0.88,
+          "cost_per_request": 0.0,
+          "notes": "10-minute updates for dev"
+        },
+        "market_indices": {
+          "supported": true,
+          "update_frequency_seconds": 600,
+          "real_time": false,
+          "batch_support": false,
+          "max_symbols_per_request": 1,
+          "data_quality_score": 0.90,
+          "cost_per_request": 0.0
+        },
+        "top_movers": {
+          "supported": true,
+          "update_frequency_seconds": 1800,
+          "real_time": false,
+          "batch_support": false,
+          "max_symbols_per_request": 5,
+          "data_quality_score": 0.85,
+          "cost_per_request": 0.0,
+          "notes": "Reduced list for dev testing"
+        }
+      },
+      "supported_exchanges": ["HOSE", "HNX"],
+      "supported_currencies": ["VND"],
+      "timezone": "Asia/Ho_Chi_Minh",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Development Bot)"
+      },
+      "average_response_time_ms": 1500,
+      "success_rate": 0.92,
+      "data_freshness_seconds": 600
+    }
+  }
+}
