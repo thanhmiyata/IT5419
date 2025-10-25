@@ -265,11 +265,66 @@ Client Request → Chat API → Master Agent → Planning Agent → Tool Executi
 - **Data Merger**: Weighted average dựa trên reliability
 - **Real-time Processing**: Async/await với Redis
 
+#### Vector Database Integration:
+- **Qdrant Vector DB**: Lưu trữ embeddings của financial documents
+- **Document Processing**: Chunking financial reports và news articles
+- **Embedding Generation**: Vietnamese SBERT cho text embeddings
+- **Vector Search**: Semantic search cho financial information
+- **RAG Pipeline**: Retrieval-Augmented Generation cho AI responses
+
+#### Vector Data Pipeline:
+```
+Financial Reports → Text Chunking → Embedding Generation → Vector Storage → Semantic Search
+     │                    │                    │                    │              │
+     ▼                    ▼                    ▼                    ▼              ▼
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐  ┌─────────────┐
+│ BCTC Data   │    │ Metadata    │    │ SBERT       │    │ Qdrant      │  │ Similarity  │
+│ News        │    │ Extraction  │    │ Encoding    │    │ Collections │  │ Search      │
+│ Articles    │    │ Content     │    │ (768 dims)  │    │ HNSW Index  │  │ Ranking     │
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘  └─────────────┘
+```
+
+#### Chi tiết Vector Database Integration:
+
+**1. Document Processing Pipeline**
+- **Financial Reports Chunking**: Chia nhỏ báo cáo tài chính (BCTC) thành chunks có ý nghĩa
+- **News Article Processing**: Xử lý tin tức từ VnExpress, TuoiTre, ThanhNien
+- **Metadata Extraction**: Trích xuất symbol, date, quarter, report type
+- **Content Cleaning**: Làm sạch HTML, normalize text, remove noise
+
+**2. Embedding Generation**
+- **Vietnamese SBERT Model**: Sử dụng sentence-transformers cho tiếng Việt
+- **Multi-modal Embeddings**: Kết hợp text, numerical data, temporal features
+- **Embedding Dimensions**: 768 dimensions cho optimal performance
+- **Batch Processing**: Xử lý hàng loạt để tăng efficiency
+
+**3. Vector Storage Strategy**
+- **Qdrant Collections**: Tổ chức vectors theo collections (financial_reports, news_articles)
+- **Indexing Strategy**: HNSW index cho fast similarity search
+- **Vector Compression**: Compress vectors để tiết kiệm storage
+- **Sharding Strategy**: Distribute vectors across multiple nodes
+
+**4. Semantic Search Implementation**
+- **Query Processing**: Convert user queries thành embeddings
+- **Similarity Search**: Cosine similarity search trong vector space
+- **Result Ranking**: Rank results theo relevance score
+- **Context Assembly**: Combine multiple relevant chunks
+
+**5. RAG (Retrieval-Augmented Generation)**
+- **Context Retrieval**: Tìm relevant documents cho user query
+- **Context Filtering**: Filter theo symbol, date, relevance threshold
+- **Context Ranking**: Rank contexts theo relevance và recency
+- **Context Injection**: Inject context vào AI prompts cho better responses
+
 #### Tiềm năng ứng dụng:
 - High availability với multiple fallback sources
 - Data quality cao
 - Scalable architecture
 - Real-time processing
+- Intelligent semantic search
+- Context-aware AI responses
+- Knowledge base cho financial analysis
+- Enhanced AI accuracy với relevant context
 
 ### 3. **TÍCH HỢP MACHINE LEARNING**
 
